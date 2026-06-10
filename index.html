@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI美业智能工具体系平台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --accent: #ec4899;
+  --accent-light: #f472b6;
+  --accent-dark: #db2777;
+  --dark: #1e293b;
+  --dark-light: #334155;
+  --light: #f8fafc;
+  --gray: #94a3b8;
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --success: #10b981;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-hover: 0 12px 40px rgba(99,102,241,0.15);
+  --radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  color: var(--dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+/* Navigation */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(99,102,241,0.1);
+  transition: var(--transition);
+}
+.nav.scrolled {
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dark);
+  text-decoration: none;
+}
+.nav-brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+.nav-links {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+}
+.nav-links a {
+  padding: 10px 18px;
+  text-decoration: none;
+  color: var(--dark-light);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: var(--transition);
+}
+.nav-links a:hover, .nav-links a.active {
+  background: rgba(99,102,241,0.08);
+  color: var(--primary);
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 32px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  animation: float 8s ease-in-out infinite;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%);
+  animation: float 10s ease-in-out infinite reverse;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -30px) scale(1.1); }
+}
+.hero-content {
+  max-width: 900px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.15);
+  border-radius: 100px;
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--dark-light);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+}
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+}
+.btn-outline {
+  background: white;
+  color: var(--dark);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Sections */
+.section {
+  padding: 80px 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.section-tag {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(99,102,241,0.08);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.section-header h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--dark);
+}
+.section-header p {
+  font-size: 16px;
+  color: var(--gray);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tool Categories */
+.tool-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.tool-tab {
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-light);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.tool-tab:hover {
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+.tool-tab.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Tool Grid */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.tool-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0;
+  transition: var(--transition);
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+.tool-card:hover::before {
+  opacity: 1;
+}
+.tool-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.tool-card-icon.ai { background: linear-gradient(135deg, #6366f1, #818cf8); }
+.tool-card-icon.image { background: linear-gradient(135deg, #ec4899, #f472b6); }
+.tool-card-icon.video { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.tool-card-icon.digital { background: linear-gradient(135deg, #10b981, #34d399); }
+.tool-card-icon.music { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.tool-card-icon.utils { background: linear-gradient(135deg, #64748b, #94a3b8); }
+.tool-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+.tool-card p {
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.tool-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tool-card-tag {
+  padding: 4px 10px;
+  background: rgba(99,102,241,0.06);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+}
+.tool-card-link {
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* Scenarios */
+.scenarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 32px;
+}
+.scenario-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.scenario-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+.scenario-header {
+  padding: 32px 32px 24px;
+  position: relative;
+}
+.scenario-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+.scenario-icon.hair { background: linear-gradient(135deg, #6366f1, #818cf8); }
+.scenario-icon.makeup { background: linear-gradient(135deg, #ec4899, #f472b6); }
+.scenario-icon.nails { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.scenario-header h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.scenario-header .target {
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 500;
+}
+.scenario-body {
+  padding: 0 32px 32px;
+}
+.scenario-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.scenario-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(99,102,241,0.08);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.step-content p {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+.scenario-highlight {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(236,72,153,0.04));
+  border-radius: 12px;
+  border-left: 3px solid var(--primary);
+}
+.scenario-highlight p {
+  font-size: 13px;
+  color: var(--dark-light);
+  font-weight: 500;
+}
+
+/* Workflow */
+.workflow {
+  background: var(--dark);
+  border-radius: 24px;
+  padding: 64px 48px;
+  margin: 64px 0;
+  position: relative;
+  overflow: hidden;
+}
+.workflow::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
+}
+.workflow h2 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  color: white;
+  text-align: center;
+  margin-bottom: 48px;
+}
+.workflow-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.workflow-steps::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0.3;
+}
+.workflow-step {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 140px;
+}
+.wf-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+  transition: var(--transition);
+}
+.workflow-step:hover .wf-icon {
+  background: rgba(99,102,241,0.2);
+  border-color: var(--primary-light);
+  transform: scale(1.05);
+}
+.workflow-step h4 {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.workflow-step p {
+  color: var(--gray);
+  font-size: 12px;
+}
+.wf-arrow {
+  color: rgba(255,255,255,0.3);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 48px 32px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+.footer p {
+  font-size: 13px;
+  color: var(--gray);
+}
+.footer-brand {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+/* Animations */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-inner { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .section { padding: 60px 20px; }
+  .tool-grid { grid-template-columns: 1fr; }
+  .scenarios-grid { grid-template-columns: 1fr; }
+  .workflow { padding: 40px 24px; }
+  .workflow-steps { flex-direction: column; }
+  .workflow-steps::before { display: none; }
+  .wf-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-icon">AI</div>
+      <span>美业智能平台</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#tools" class="active">AI工具</a></li>
+      <li><a href="#scenarios">应用场景</a></li>
+      <li><a href="#workflow">工作流</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content fade-in">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      已收录 15+ 款核心AI工具
+    </div>
+    <h1>AI美业智能<br>工具体系平台</h1>
+    <p>整合顶级AI大模型能力，为理发店、美容院、美甲店提供自动化推广方案，让小范围美业服务实现高效规模化。</p>
+    <div class="hero-actions">
+      <a href="#tools" class="btn btn-primary">浏览AI工具 →</a>
+      <a href="#scenarios" class="btn btn-outline">查看应用场景</a>
+    </div>
+  </div>
+</section>
+
+<!-- AI Tools Section -->
+<section class="section" id="tools">
+  <div class="section-header fade-in">
+    <span class="section-tag">AI Tools Hub</span>
+    <h2>AI工具收藏中心</h2>
+    <p>精心筛选的15+款AI工具，覆盖图像、视频、数字人、音乐等核心场景</p>
+  </div>
+
+  <div class="tool-tabs fade-in">
+    <button class="tool-tab active" data-filter="all">全部工具</button>
+    <button class="tool-tab" data-filter="ai">AI平台</button>
+    <button class="tool-tab" data-filter="image">图像生成</button>
+    <button class="tool-tab" data-filter="video">视频生成</button>
+    <button class="tool-tab" data-filter="digital">数字人</button>
+    <button class="tool-tab" data-filter="music">音频生成</button>
+    <button class="tool-tab" data-filter="utils">实用工具</button>
+  </div>
+
+  <div class="tool-grid" id="toolGrid">
+    <!-- Tools will be rendered by JS -->
+  </div>
+</section>
+
+<!-- Scenarios Section -->
+<section class="section" id="scenarios">
+  <div class="section-header fade-in">
+    <span class="section-tag">Business Scenarios</span>
+    <h2>三大美业应用场景</h2>
+    <p>AI赋能美业三大核心场景，打造自动化推广闭环</p>
+  </div>
+
+  <div class="scenarios-grid">
+    <!-- Hair Scenario -->
+    <div class="scenario-card fade-in">
+      <div class="scenario-header">
+        <div class="scenario-icon hair">✂️</div>
+        <span class="target">理发店 / 发型师</span>
+        <h3>AI发型推荐系统</h3>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-steps">
+          <div class="scenario-step">
+            <span class="step-num">1</span>
+            <div class="step-content">
+              <h4>拍摄客户正面照片</h4>
+              <p>简单拍摄或上传客户清晰正面照</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">2</span>
+            <div class="step-content">
+              <h4>AI智能分析</h4>
+              <p>自动识别脸型、发质、肤色等特征</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">3</span>
+            <div class="step-content">
+              <h4>生成9款发型方案</h4>
+              <p>根据分析结果推荐最适合的9款发型</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">4</span>
+            <div class="step-content">
+              <h4>客户选择确认</h4>
+              <p>客户挑选心仪发型，直接执行服务</p>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-highlight">
+          <p>💡 核心价值：自动生成，无需发型师一对一沟通，提升3倍接待效率</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Makeup Scenario -->
+    <div class="scenario-card fade-in">
+      <div class="scenario-header">
+        <div class="scenario-icon makeup">💄</div>
+        <span class="target">美容院 / 化妆师</span>
+        <h3>AI妆容定制系统</h3>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-steps">
+          <div class="scenario-step">
+            <span class="step-num">1</span>
+            <div class="step-content">
+              <h4>面部特征采集</h4>
+              <p>AI分析五官比例、肤色、肤质</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">2</span>
+            <div class="step-content">
+              <h4>风格偏好选择</h4>
+              <p>日常/约会/商务/派对等场合选择</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">3</span>
+            <div class="step-content">
+              <h4>生成妆容方案</h4>
+              <p>底妆、眼妆、唇妆、腮红全套搭配</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">4</span>
+            <div class="step-content">
+              <h4>产品推荐匹配</h4>
+              <p>推荐适合的美妆产品清单</p>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-highlight">
+          <p>💡 核心价值：标准化妆容咨询流程，降低沟通成本，提升成单率</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nails Scenario -->
+    <div class="scenario-card fade-in">
+      <div class="scenario-header">
+        <div class="scenario-icon nails">💅</div>
+        <span class="target">美甲店</span>
+        <h3>AI美甲款式推荐</h3>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-steps">
+          <div class="scenario-step">
+            <span class="step-num">1</span>
+            <div class="step-content">
+              <h4>手部信息采集</h4>
+              <p>分析手型、肤色、指甲形状</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">2</span>
+            <div class="step-content">
+              <h4>季节/场合匹配</h4>
+              <p>结合季节流行趋势和使用场景</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">3</span>
+            <div class="step-content">
+              <h4>生成款式方案</h4>
+              <p>多款美甲设计，包含色彩搭配</p>
+            </div>
+          </div>
+          <div class="scenario-step">
+            <span class="step-num">4</span>
+            <div class="step-content">
+              <h4>一键替换展示</h4>
+              <p>自动替换逻辑，无需人工设计</p>
+            </div>
+          </div>
+        </div>
+        <div class="scenario-highlight">
+          <p>💡 核心价值：模板化生成，自动替换，实现小范围自动化推广</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflow -->
+  <div class="workflow fade-in" id="workflow">
+    <h2>自动化推广工作流</h2>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="wf-icon">📸</div>
+        <h4>客户进店</h4>
+        <p>拍照/选择需求</p>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="workflow-step">
+        <div class="wf-icon">🤖</div>
+        <h4>AI分析</h4>
+        <p>自动识别特征</p>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="workflow-step">
+        <div class="wf-icon">🎨</div>
+        <h4>生成方案</h4>
+        <p>9款推荐方案</p>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="workflow-step">
+        <div class="wf-icon">✅</div>
+        <h4>客户选择</h4>
+        <p>确认心仪款式</p>
+      </div>
+      <div class="wf-arrow">→</div>
+      <div class="workflow-step">
+        <div class="wf-icon">💾</div>
+        <h4>保存推送</h4>
+        <p>自动推送门店</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>由 <span class="footer-brand">AI美业智能平台</span> 提供技术支持</p>
+</footer>
+
+<script>
+// Tools Data
+const tools = [
+  {
+    name: '一站式AI大模型平台',
+    desc: '顶级AI大模型统一入口，集成多种AI能力',
+    url: 'https://oimi.ai',
+    category: 'ai',
+    icon: '🚀'
+  },
+  {
+    name: '全能无限工作流画布',
+    desc: '可视化AI工作流编排，自由组合AI能力',
+    url: 'https://oimi.ai/zh/canvas',
+    category: 'ai',
+    icon: '🎯'
+  },
+  {
+    name: '大香蕉 Nano无限画布',
+    desc: '创意无限画布，AI辅助设计创作',
+    url: 'https://oimi.ai/zh/nano-banana-canvas',
+    category: 'image',
+    icon: '🍌'
+  },
+  {
+    name: '小红书图文创作工具',
+    desc: '专为小红书平台设计的图文生成工具',
+    url: 'https://xiaohongshu.oimi.ai',
+    category: 'utils',
+    icon: '📕'
+  },
+  {
+    name: '大香蕉 NanoPro文生图',
+    desc: '高质量文字转图片生成器',
+    url: 'https://oimi.ai/zh/nano-banana-pro',
+    category: 'image',
+    icon: '🖼️'
+  },
+  {
+    name: 'GLM-Image文生图',
+    desc: 'GLM大模型驱动的图像生成工具',
+    url: 'https://oimi.ai/zh/glm-image',
+    category: 'image',
+    icon: '🎨'
+  },
+  {
+    name: 'Z-Image极速生成',
+    desc: '超快速图像生成，秒级出图',
+    url: 'https://oimi.ai/zh/z-image',
+    category: 'image',
+    icon: '⚡'
+  },
+  {
+    name: 'Sora2 视频生成',
+    desc: '先进的文本到视频生成工具',
+    url: 'https://oimi.ai/zh/sora2',
+    category: 'video',
+    icon: '🎬'
+  },
+  {
+    name: 'Sora2去水印工具',
+    desc: '视频秒级去水印，保持画质无损',
+    url: 'https://oimi.ai/zh/sora2/watermark-remover',
+    category: 'video',
+    icon: '✨'
+  },
+  {
+    name: 'Veo3.1 视频生成',
+    desc: '新一代视频生成大模型',
+    url: 'https://oimi.ai/zh/veo',
+    category: 'video',
+    icon: '🎥'
+  },
+  {
+    name: 'Suno AI 音乐生成',
+    desc: 'AI音乐创作，文字生成完整音乐',
+    url: 'https://oimi.ai/zh/suno',
+    category: 'music',
+    icon: '🎵'
+  },
+  {
+    name: 'Infinitetalk 图生数字人',
+    desc: '单人图片生成数字人视频',
+    url: 'https://oimi.ai/zh/InfiniteTalkI2V',
+    category: 'digital',
+    icon: '👤'
+  },
+  {
+    name: 'Infinitetalk 视频生数字人',
+    desc: '单人视频转换为数字人视频',
+    url: 'https://oimi.ai/zh/InfiniteTalkV2V',
+    category: 'digital',
+    icon: '🎭'
+  },
+  {
+    name: 'Heygem AI数字人',
+    desc: '专业AI数字人生成工具',
+    url: 'https://oimi.ai/zh/heygem',
+    category: 'digital',
+    icon: '🤖'
+  },
+  {
+    name: '智能去除图片背景',
+    desc: '一键智能抠图，精准去除背景',
+    url: 'https://oimi.ai/zh/remove-bg',
+    category: 'utils',
+    icon: '🔧'
+  }
+];
+
+// Render Tools
+const toolGrid = document.getElementById('toolGrid');
+const categoryNames = {
+  ai: 'AI平台',
+  image: '图像生成',
+  video: '视频生成',
+  digital: '数字人',
+  music: '音频生成',
+  utils: '实用工具'
+};
+
+function renderTools(filter = 'all') {
+  const filtered = filter === 'all' ? tools : tools.filter(t => t.category === filter);
+  toolGrid.innerHTML = filtered.map(tool => `
+    <a href="${tool.url}" target="_blank" class="tool-card" data-category="${tool.category}">
+      <div class="tool-card-icon ${tool.category}">${tool.icon}</div>
+      <h3>${tool.name}</h3>
+      <p>${tool.desc}</p>
+      <div class="tool-card-footer">
+        <span class="tool-card-tag">${categoryNames[tool.category]}</span>
+        <span class="tool-card-link">打开 →</span>
+      </div>
+    </a>
+  `).join('');
+}
+
+renderTools();
+
+// Tab Filtering
+document.querySelectorAll('.tool-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTools(tab.dataset.filter);
+  });
+});
+
+// Navigation Scroll Effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Smooth Scroll
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Active Nav Link
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (scrollY >= sectionTop - 200) {
+      current = section.getAttribute('id');
+    }
+  });
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
+});
+
+// Fade In Animation
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
