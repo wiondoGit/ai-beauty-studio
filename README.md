@@ -102,6 +102,8 @@ MIT License
 
 ## 🤝 联系方式
 
+VX：Struggle-in
+
 如有问题或建议，欢迎提交 [Issue](https://github.com/wiondogit/ai-beauty-studio/issues)。
 
 ---
